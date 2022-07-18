@@ -5,6 +5,7 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.concurrent.TimeUnit
 
 //add a companion object to this class
 /*why companion object?
@@ -26,10 +27,19 @@ class RetrofitInstance {
         }
         val client = OkHttpClient.Builder().apply {
             this.addInterceptor(interceptor)
-            /*
-            We will add them inside this OkHttp client builder block. We don’t need to manually add timeouts, if it is not required.
-             */
-            
+                /*
+                We will add them inside this OkHttp client builder block. We don’t need to manually add timeouts, if it is not required.
+                 */
+                /*
+                 Connect timeout is the time period in which our app should establish a connection with the server.
+                           Since we just set it as 30 seconds our app’s http client which is the retrofit instance will try to connect to the server for 30 seconds.
+                           After 30 seconds it will stop trying.
+                            By default this is just 10 seconds. So I think for the most of the cases 30 seconds will be more than enough.
+                            */
+                .connectTimeout(30, TimeUnit.SECONDS)
+                .readTimeout(20,TimeUnit.SECONDS)//Read timeout has defined as maximum time gap between arrivals of two data packets  when waiting for the server's response
+                .writeTimeout(25,TimeUnit.SECONDS)//maximum time gap between two data packets  when sending them to the server
+
         }.build()
 
 
