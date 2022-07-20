@@ -1,9 +1,7 @@
 package com.amir.retrofitdemo
 
 import retrofit2.Response
-import retrofit2.http.GET
-import retrofit2.http.Path
-import retrofit2.http.Query
+import retrofit2.http.*
 
 interface AlbumService {
 
@@ -32,10 +30,15 @@ interface AlbumService {
     //then define the parameter  =>  @Query("userId")userId:Int
     @GET("/albums")
     suspend fun getSortedAlbums(@Query("userId") userId: Int): Response<Albums>
+
     //As you can see here, This URL with path parameter gives an AlbumItem object.
     //Therefore the return type should be a Retrofit Response object of type AlbumItem.
     @GET("/albums/{id}")
-    suspend fun getAlbum(@Path(value = "id") albumId: Int):Response<AlbumsItem>
+    suspend fun getAlbum(@Path(value = "id") albumId: Int): Response<AlbumsItem>
+
+    //This albumsItem will send as the body of the POST request. So, we should annotate this with the body annotation.
+    @POST("/albums")
+    suspend fun uploadAlbum(@Body album: AlbumsItem): Response<AlbumsItem>
 
 
 }
